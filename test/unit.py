@@ -1,5 +1,6 @@
 import redis
 import requests
+import json
 
 redis_conn = redis.Redis(host='message_queue', port=6379)
 
@@ -14,5 +15,14 @@ def test_get_null():
     response = requests.get('http://customer_order:15000/r1o5')
     assert response.status_code == 404
     assert response.json() == {'error': 'not found'}
+
+def test_set_taken():
+    data = json.dumps({'order_id': 'r2o3', 'taken': 1})
+    redis_conn.publish('customerOrder_setTaken', data)
+    response = requests.get('http://customer_order:15000/r2o3')
+    assert response.status_code == 200
+    assert response.json() == {
+        'order_id':'r2o3', 'restaurant_id':2, 'food_id':3, 'taken':1
+    }
 
     
