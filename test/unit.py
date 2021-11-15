@@ -10,4 +10,9 @@ def test_get_order():
         'order_id':'r1o1', 'restaurant_id':1, 'food_id':1, 'taken':1
     }
 
+def test_get_null():
+    response = requests.get('http://customer_order:15000/r1o5')
+    assert response.status_code == 404
+    assert response.json() == {'error': 'not found'}
+
     
