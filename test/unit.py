@@ -25,4 +25,13 @@ def test_set_taken():
         'order_id':'r2o3', 'restaurant_id':2, 'food_id':3, 'taken':1
     }
 
+def test_new_order():
+    load = json.dumps({'order_id': 'r1o4', 'restaurant_id':1,'food_id': 1,'user_id':1})
+    redis_conn.publish('customerOrder_newOrder', load)
+    response = requests.get('http://customer_order:15000/r1o4')
+    assert response.status_code == 200
+    assert response.json() == {
+        'order_id':'r1o4', 'restaurant_id':1, 'food_id':1, 'taken':0
+    }
+
     
